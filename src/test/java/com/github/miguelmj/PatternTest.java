@@ -12,7 +12,7 @@ public class PatternTest {
 	@Test
 	public void recognizeGeneratedTest() {
 		boolean ok = true;
-		String str = "(Hi|Hello), how are you (today)?";
+		String str = "(Hi|Hello), how are you( today)?\\?";
 		pattern.setString(str);
 		for(int i=0; i<10; i++) {
 			String gen = pattern.generate();

@@ -24,4 +24,7 @@ public class Pattern {
 	public String generate() {
 		return generator.random();
 	}
+	public String toString() {
+		return pattern.toString();
+	}
 }

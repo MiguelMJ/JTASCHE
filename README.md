@@ -9,8 +9,8 @@
 </p>
 
 ### Description
-JTASCHE is the Java version of [TASCHE](https://github.com/MiguelMJ/TASCHE).
-
-TASCHE is a tool for specifying text-based applications that seeks flexibility in the input recognition and response generation.
+JTASCHE is a java tool for specifying text-based applications that seeks flexibility in the input recognition and response generation.
 
 Currently under development: ![last commit](https://img.shields.io/github/last-commit/MiguelMJ/JTASCHE)
+
+JTASCHE is the Java version of [TASCHE](https://github.com/MiguelMJ/TASCHE).

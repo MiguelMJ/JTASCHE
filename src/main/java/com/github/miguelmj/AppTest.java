@@ -8,6 +8,7 @@ public class AppTest {
     		System.out.println(cui.toJson(true,false));
     	}
     	try {
+    		cui.initialize();
 			System.out.println(cui.answer("hola"));
 			System.out.println(cui.answer("hola"));
 			System.out.println(cui.answer("como estas"));

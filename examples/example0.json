@@ -1,5 +1,5 @@
 {
-"responses":[{
+"response":{
         "input":"hola",
         "responses":[{
                 "condition":"'saludo' not in locals()",
@@ -9,5 +9,5 @@
             {
                 "output":"he dicho que saludos"
             }]
-    }]
+        }
 }

@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.After;
 import org.junit.Test;
 import org.python.util.PythonInterpreter;
-import org.python.core.PyCode;
 
 public class ScriptTest {
 	@Before 

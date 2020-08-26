@@ -3,7 +3,7 @@ package com.github.miguelmj;
 public class AppTest {
     public static void main(String[] args){
     	CUI cui = new CUI();
-    	if(cui.load("example0.json")) {
+    	if(cui.load("examples/example0.json")) {
     		System.out.println("LOADED:");
     		System.out.println(cui.toJson(true,false));
     	}

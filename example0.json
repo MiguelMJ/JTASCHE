@@ -1,0 +1,13 @@
+{
+"responses":[{
+        "input":"hola",
+        "responses":[{
+                "condition":"'saludo' not in locals()",
+                "output":"saludos, viajero",
+                "execute":"saludo = 1; print('saludo:',saludo)"
+            },
+            {
+                "output":"he dicho que saludos"
+            }]
+    }]
+}

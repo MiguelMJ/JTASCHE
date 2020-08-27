@@ -1,0 +1,7 @@
+{
+"init":"nombre = 'Nadie'",
+"responses":[{
+		"input":"(mi nombre es|me llamo) (?<nombre>[a-zA-Z]+) (?<apellido>[a-zA-Z]+)",
+		"output":"Hola, (?<nombre>[a-zA-Z]+)"
+	}]
+}

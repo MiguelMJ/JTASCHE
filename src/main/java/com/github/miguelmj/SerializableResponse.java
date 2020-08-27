@@ -16,7 +16,10 @@ public class SerializableResponse{
 	public String execute;
 	public String new_question;
 	List<SerializableResponse> responses;
-	
+	/**
+	 * Depending on the fields that are not null, this function returns the corresponding Response object.
+	 * @return Response object associated.
+	 */
 	public Response getResponse() {
 		Response ret;
 		if(output != null && responses == null) {

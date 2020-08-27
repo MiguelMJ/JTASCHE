@@ -70,7 +70,7 @@ public class CUI {
 		List<String> list = new ArrayList<String>();
 		for(Module module : modules) {
 			Optional<String> ans = module.answer(question);
-			if(ans.isPresent()) list.add(module.answer(question).get());
+			if(ans.isPresent()) list.add(ans.get());
 		}
 		return String.join(" ",list);
 	}
@@ -81,17 +81,19 @@ public class CUI {
 	 * @return The JSON representation of the CUI.
 	 */
 	public String toJson(boolean pretty, boolean escape) {
-		SerializableModule mod = new SerializableModule();
-		mod.response.responses = new ArrayList<SerializableResponse>();
+		SerializableModule serMod = new SerializableModule();
+		serMod.responses = new ArrayList<SerializableResponse>();
 		for(Module module: modules) {
-			if(module.init != null) mod.init += module.init.toString() + '\n';
-			if(module.response != null) mod.response.responses.add(module.response.serializable());
+			serMod.init += module.init.toString() + '\n';
+			for(Response res: module.responses) {
+				serMod.responses.add(res.serializable());
+			}
 		}
 		
 		GsonBuilder builder = new GsonBuilder();
 		if(pretty) builder.setPrettyPrinting();
 		if(!escape) builder.disableHtmlEscaping();
 		Gson gson = builder.create();
-		return gson.toJson(mod);
+		return gson.toJson(serMod);
 	}
 }

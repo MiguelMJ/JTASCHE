@@ -1,6 +1,8 @@
 package com.github.miguelmj;
 
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import com.google.gson.Gson;
@@ -10,9 +12,10 @@ import com.google.gson.Gson;
  */
 public class Module {
 	protected Script init;
-	protected Response response;
+	protected List<Response> responses;
 	Module(){
 		init = new Script();
+		responses = new ArrayList<Response>();
 	}
 	/**
 	 * Loads the module in a JSON format from the reader.
@@ -20,15 +23,12 @@ public class Module {
 	 * @return True if the load was successful.
 	 */
 	public boolean load(Reader reader) {
-		try {
-			Gson gson = new Gson();
-			SerializableModule mod = gson.fromJson(reader, SerializableModule.class);
-			response = mod.response.getResponse();
-			init.setCode(mod.init);
-		}catch(Exception e) {
-			e.printStackTrace();
-			return false;
+		Gson gson = new Gson();
+		SerializableModule mod = gson.fromJson(reader, SerializableModule.class);
+		for(SerializableResponse sr : mod.responses) {
+			responses.add(sr.getResponse());
 		}
+		init.setCode(mod.init);
 		return true;
 	}
 	/**
@@ -43,6 +43,10 @@ public class Module {
 	 * @return An answer if possible, empty optional if not.
 	 */
 	public Optional<String> answer(String question){
-		return response.answer(question);
+		for(Response res: responses){
+			Optional<String> ans = res.answer(question);
+			if(ans.isPresent()) return ans;
+		}
+		return Optional.empty();
 	}
 }

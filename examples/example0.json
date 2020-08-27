@@ -1,10 +1,11 @@
 {
+"init":"saludo=False",
 "response":{
         "input":"hola",
         "responses":[{
-                "condition":"'saludo' not in locals()",
+                "condition":"not saludo",
                 "output":"saludos, viajero",
-                "execute":"saludo = 1; print('saludo:',saludo)"
+                "execute":"saludo = True"
             },
             {
                 "output":"he dicho que saludos"

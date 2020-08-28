@@ -3,8 +3,8 @@
 <h1 align="center">Text Adventure and Simple CHatbot Engine</h1>
 
 <p align="center">
-<a href="https://codedocs.xyz/MiguelMJ/JTASCHE/"><img alt="documentation" src="https://img.shields.io/badge/documentation-codedocs-green"></a>
-    <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green"></a>
+<a href="https://codedocs.xyz/MiguelMJ/JTASCHE/"><img alt="documentation" src="https://img.shields.io/badge/documentation-codedocs-success"></a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-informational"></a>
 <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/MiguelMJ/JTASCHE">
 </p>
 

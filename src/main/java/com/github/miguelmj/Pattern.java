@@ -20,7 +20,9 @@ public class Pattern {
 	private java.util.regex.Pattern pattern;
 	private Generex generator;
 	private List<String> variables;
-	private String generatorTemplate;
+	private List<String> placeholders;
+	private String outputTemplate;
+	private String inputTemplate;
 	/**
 	 * Constructs the Pattern with an empty string.
 	 */
@@ -28,42 +30,64 @@ public class Pattern {
 		pattern = java.util.regex.Pattern.compile("");
 		generator = new Generex("");
 		variables = new ArrayList<String>();
+		placeholders = new ArrayList<String>();
 	}
 	/**
 	 * Constructs the Pattern with the regex parsed in str.
 	 * @param str Regular expression to parse.
 	 */
 	public Pattern(String str) {
-		setString(str);
+		setString(str, false);
+	}
+	/**
+	 * Constructs the Pattern with the regex parsed in str.
+	 * @param str Regular expression to parse.
+	 * @param adapt Tells to adapt the regex from custom format
+	 */
+	public Pattern(String str, boolean adapt) {
+		setString(str, adapt);
+	}
+	/**
+	 * Chanves the Pattern to use the regex parsed in str.
+	 * @param str Regular expression to parse.
+	 */
+	public void setString(String str) {
+		setString(str,false);
 	}
 	/**
 	 * Changes the Pattern to use the regex parsed in str.
 	 * @param str Regular expression to parse.
+	 * @param adapt Tells to adapt the regex from custom format
 	 */
-	public void setString(String str) {
-		pattern = java.util.regex.Pattern.compile(str);
+	public void setString(String str, boolean adapt) {
+		if (adapt) str = RegexAdapter.adapt(str);
+		inputTemplate = str;
 		variables = new ArrayList<String>();
+		placeholders = new ArrayList<String>();
 		
-		// First we look for variables in the pattern
-		//String varPattStr = "\\(\\?\\<(?<groupname>[a-zA-Z][a-zA-Z0-9]*)\\>[^)]\\)";
-		//String varPattStr = "\\(\\?<([^>]?)>[^)]\\)";
-		String varPattStr = "\\(\\?<(?<groupname>[^>]*)>[^)]*\\)";
-
-		generatorTemplate = str;
+		// First we look for placeholders in the pattern
+		String phPattStr = "\\(\\?<(?<id>[^>]*)>\\([^)]*\\)[^)]*\\)";
+		java.util.regex.Pattern phPatt = java.util.regex.Pattern.compile(phPattStr);
 		
-		java.util.regex.Pattern varPatt = java.util.regex.Pattern.compile(varPattStr);
-				
-		Matcher varFinder = varPatt.matcher(generatorTemplate);
-		while(varFinder.find()) {
-			String var = varFinder.group(1);
-			variables.add(var);
-			generatorTemplate = varFinder.replaceFirst("\\$\\{${groupname}\\}");
-			varFinder.reset(generatorTemplate);
+		Matcher phFinder = phPatt.matcher(str);
+		while(phFinder.find()) {
+			placeholders.add(phFinder.group("id"));
 		}
+		// Then we look for variables in the pattern
+		Matcher varFinder = RegexAdapter.variable.matcher(str);
+		while(varFinder.find()) {
+			variables.add(varFinder.group("id"));
+		}
+		// And now we set the outputTemplate (the inputTemplate is the same pattern)
+		outputTemplate = phFinder.replaceAll("\\\\\\$${id}");
 		
-		// Now make the generex according to
+		// Now we make the recognizer and the generator if they
+		// don't depend on any variable
 		if(variables.isEmpty()) {
-			generator = new Generex(generatorTemplate);
+			pattern = java.util.regex.Pattern.compile(inputTemplate);
+			if(placeholders.isEmpty()) {
+				generator = new Generex(outputTemplate);
+			}
 		}
 	}
 	/**
@@ -72,12 +96,21 @@ public class Pattern {
 	 * @return True if the string matches the pattern.
 	 */
 	public boolean matches(String str) {
-		java.util.regex.Matcher matcher = pattern.matcher(str);
+		java.util.regex.Pattern localPatt;
+		if(pattern != null){
+			localPatt = pattern;
+		}else {
+			String recognizerStr = RegexAdapter.remplaceVars(inputTemplate);
+			localPatt = java.util.regex.Pattern.compile(recognizerStr);
+		}
+		
+		java.util.regex.Matcher matcher = localPatt.matcher(str);
 		boolean match = matcher.matches();
 		if(match) 
-			for(String var: variables) {
-				String value = matcher.group(var);
-				Script.pyMachine.set(var, value);
+			for(String ph: placeholders) {
+				String value = matcher.group(ph);
+				if(!ph.isEmpty())
+					Script.pyMachine.set(ph, value);
 			}
 		return match;
 	}
@@ -86,18 +119,14 @@ public class Pattern {
 	 * @return A random string that matches the pattern.
 	 */
 	public String generate() {
-		if(!variables.isEmpty()) {
-			String varPattStr = "\\$\\{(?<var>[^}]+)\\}";
-			String generatorStr = generatorTemplate;
-			Matcher varFinder = java.util.regex.Pattern.compile(varPattStr).matcher(generatorStr);
-			while(varFinder.find()) {
-				String value = Script.pyMachine.get(varFinder.group("var")).asString();
-				generatorStr = varFinder.replaceFirst(value);
-				varFinder.reset(generatorStr);
-			}
-			generator = new Generex(generatorStr);
-		}
-		return generator.random();
+		Generex localGen;
+		if(generator != null) {
+			localGen = generator;
+		}else{
+			String generatorStr = RegexAdapter.remplaceVars(outputTemplate);
+			localGen = new Generex(generatorStr);
+		} 
+		return localGen.random();
 	}
 	/**
 	 * Return the regex parsed to construct the pattern.

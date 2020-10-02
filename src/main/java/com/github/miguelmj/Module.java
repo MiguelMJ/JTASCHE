@@ -8,7 +8,7 @@ import java.util.Optional;
 import com.google.gson.Gson;
 
 /**
- * List of responses with an initialization script for the innter state.
+ * List of responses with an initialization script for the inner state.
  */
 public class Module {
 	protected Script init;

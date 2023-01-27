@@ -1,0 +1,12 @@
+digraph "Response"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  Node1 [label="Response",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip="Base class for responses."];
+  Node2 -> Node1 [dir="back",color="darkorchid3",style="dashed",label=" input" ];
+  Node2 [label="Pattern",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$classcom_1_1github_1_1miguelmj_1_1Pattern.html",tooltip="Input matcher and output generator."];
+  Node3 -> Node1 [dir="back",color="darkorchid3",style="dashed",label=" condition" ];
+  Node3 [label="Script",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$classcom_1_1github_1_1miguelmj_1_1Script.html",tooltip="Python script that can be executed or evaluated as a condition."];
+}
